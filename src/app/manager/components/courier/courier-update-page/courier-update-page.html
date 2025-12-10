@@ -1,0 +1,52 @@
+<div class="bg-white rounded-lg shadow p-6">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Update Courier</h2>
+  <form [formGroup]="courierForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+        <select formControlName="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option value="ENTRANT">Entrant</option>
+          <option value="SORTANT">Sortant</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Mail Type</label>
+        <select formControlName="mailType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option value="LETTRE">Lettre</option>
+          <option value="COLIS">Colis</option>
+          <option value="RECOMMANDE">Recommandé</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+      <input type="date" formControlName="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Sender</label>
+        <input type="text" formControlName="sender" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Recipient</label>
+        <input type="text" formControlName="recipient" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Object</label>
+      <textarea formControlName="object" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Department ID</label>
+      <input type="number" formControlName="departmentId" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+    <div class="flex space-x-4">
+      <button type="submit" [disabled]="courierForm.invalid" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg disabled:opacity-50">
+        Update Courier
+      </button>
+      <button type="button" routerLink="/manager/couriers" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

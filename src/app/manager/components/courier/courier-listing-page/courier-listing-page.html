@@ -1,0 +1,151 @@
+<div class="bg-white rounded-lg shadow p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-3xl font-bold text-gray-800">Gestion des Courriers</h2>
+    <button routerLink="/manager/couriers/create" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+      <i class="fas fa-plus"></i>
+      <span>Ajouter Courrier</span>
+    </button>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full table-auto">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type de Courrier</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Expéditeur</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Destinataire</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Objet</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fichier</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let courier of couriers">
+          <td class="px-6 py-4">
+            <span [class]="courier.type === 'ENTRANT' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'" 
+                  class="px-2 py-1 rounded text-xs">{{ courier.type }}</span>
+          </td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ courier.mailType }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ courier.date }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ courier.sender }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ courier.recipient }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ courier.object }}</td>
+          <td class="px-6 py-4">
+            <span [class]="courier.status === 'EN_ATTENTE' ? 'bg-yellow-100 text-yellow-800' : 
+                           courier.status === 'EN_COURS' ? 'bg-blue-100 text-blue-800' :
+                           courier.status === 'TRAITE' ? 'bg-green-100 text-green-800' :
+                           'bg-gray-100 text-gray-800'" 
+                  class="px-2 py-1 rounded text-xs">{{ courier.status }}</span>
+          </td>
+          <td class="px-6 py-4 text-sm">
+            <div *ngIf="courier.attachmentUrl" class="flex space-x-2">
+              <button (click)="previewFile(courier)" class="text-green-600 hover:text-green-800" title="Prévisualiser">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button (click)="downloadFile(courier.id)" class="text-blue-600 hover:text-blue-800" title="Télécharger">
+                <i class="fas fa-download"></i>
+              </button>
+            </div>
+            <span *ngIf="!courier.attachmentUrl" class="text-gray-400">Aucun fichier</span>
+          </td>
+          <td class="px-6 py-4 text-sm">
+            <div class="flex space-x-2">
+              <button (click)="openStatusModal(courier)" class="text-blue-600 hover:text-blue-800">
+                <i class="fas fa-pen"></i>
+              </button>
+              <button (click)="confirmDelete(courier.id)" class="text-red-600 hover:text-red-800">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Status Update Modal -->
+  <div *ngIf="showStatusModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-lg font-semibold mb-4">Modifier le Statut</h3>
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+        <select [(ngModel)]="selectedStatus" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+          <option value="EN_ATTENTE">En Attente</option>
+          <option value="EN_COURS">En Cours</option>
+          <option value="TRAITE">Traité</option>
+          <option value="ARCHIVE">Archivé</option>
+        </select>
+      </div>
+      <div class="flex space-x-4">
+        <button (click)="updateCourierStatus()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+          Modifier
+        </button>
+        <button (click)="closeStatusModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Preview Modal -->
+  <div *ngIf="showPreviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-4xl max-h-[90vh] overflow-auto">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Prévisualisation - {{ previewCourier?.attachmentName }}</h3>
+        <button (click)="closePreviewModal()" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      
+      <div class="mb-4">
+        <!-- Image Preview -->
+        <img *ngIf="previewCourier?.attachmentUrl && previewCourier?.attachmentType && isImage(previewCourier!.attachmentType)" 
+             [src]="previewCourier!.attachmentUrl" 
+             class="max-w-full max-h-96 object-contain mx-auto">
+        
+        <!-- PDF Preview -->
+        <iframe *ngIf="previewCourier?.attachmentUrl && previewCourier?.attachmentType && isPdf(previewCourier!.attachmentType)"
+                [src]="getPreviewUrl(previewCourier!.attachmentUrl, previewCourier!.attachmentType)"
+                class="w-full h-96 border">
+        </iframe>
+        
+        <!-- Other file types -->
+        <div *ngIf="previewCourier?.attachmentUrl && previewCourier?.attachmentType && !isImage(previewCourier!.attachmentType) && !isPdf(previewCourier!.attachmentType)" 
+             class="text-center py-8">
+          <i class="fas fa-file text-4xl text-gray-400 mb-4"></i>
+          <p class="text-gray-600">Prévisualisation non disponible pour ce type de fichier</p>
+          <button (click)="downloadFile(previewCourier!.id)" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            Télécharger le fichier
+          </button>
+        </div>
+      </div>
+      
+      <div class="flex justify-end space-x-4">
+        <button (click)="downloadFile(previewCourier!.id)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+          <i class="fas fa-download mr-2"></i>Télécharger
+        </button>
+        <button (click)="closePreviewModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div *ngIf="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-lg font-semibold mb-4">Confirmer la Suppression</h3>
+      <p class="mb-6">Êtes-vous sûr de vouloir supprimer ce courrier ?</p>
+      <div class="flex space-x-4">
+        <button (click)="deleteCourier()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+          Supprimer
+        </button>
+        <button (click)="closeDeleteModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+          Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

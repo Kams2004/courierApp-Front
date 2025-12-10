@@ -1,0 +1,88 @@
+<div class="bg-white rounded-lg shadow p-6">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Tableau de Bord Gestionnaire</h2>
+  
+  <div *ngIf="isLoading" class="text-center py-8">
+    <p class="text-gray-600">Chargement des statistiques...</p>
+  </div>
+  
+  <div *ngIf="!isLoading">
+    <!-- Statistiques Principales -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-blue-500 text-white p-6 rounded-lg">
+        <div class="flex items-center">
+          <i class="fas fa-envelope text-3xl mr-4"></i>
+          <div>
+            <h3 class="text-xl font-semibold">Total Courriers</h3>
+            <p class="text-4xl font-bold mt-2">{{ totalCouriers }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-green-500 text-white p-6 rounded-lg">
+        <div class="flex items-center">
+          <i class="fas fa-arrow-down text-3xl mr-4"></i>
+          <div>
+            <h3 class="text-xl font-semibold">Courriers Entrants</h3>
+            <p class="text-4xl font-bold mt-2">{{ entrantCouriers }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-orange-500 text-white p-6 rounded-lg">
+        <div class="flex items-center">
+          <i class="fas fa-arrow-up text-3xl mr-4"></i>
+          <div>
+            <h3 class="text-xl font-semibold">Courriers Sortants</h3>
+            <p class="text-4xl font-bold mt-2">{{ sortantCouriers }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Statistiques par Statut -->
+    <div class="mb-6">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Répartition par Statut</h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded">
+          <div class="flex items-center">
+            <i class="fas fa-hourglass-half text-yellow-600 text-xl mr-3"></i>
+            <div>
+              <h4 class="font-semibold text-yellow-800">En Attente</h4>
+              <p class="text-2xl font-bold text-yellow-600">{{ enAttenteCouriers }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-blue-100 border-l-4 border-blue-500 p-4 rounded">
+          <div class="flex items-center">
+            <i class="fas fa-spinner text-blue-600 text-xl mr-3"></i>
+            <div>
+              <h4 class="font-semibold text-blue-800">En Cours</h4>
+              <p class="text-2xl font-bold text-blue-600">{{ enCoursCouriers }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded">
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-600 text-xl mr-3"></i>
+            <div>
+              <h4 class="font-semibold text-green-800">Traités</h4>
+              <p class="text-2xl font-bold text-green-600">{{ traiteCouriers }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-gray-100 border-l-4 border-gray-500 p-4 rounded">
+          <div class="flex items-center">
+            <i class="fas fa-archive text-gray-600 text-xl mr-3"></i>
+            <div>
+              <h4 class="font-semibold text-gray-800">Archivés</h4>
+              <p class="text-2xl font-bold text-gray-600">{{ archiveCouriers }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

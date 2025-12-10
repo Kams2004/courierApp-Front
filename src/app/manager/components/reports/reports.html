@@ -1,0 +1,92 @@
+<div class="bg-white rounded-lg shadow p-6">
+  <div class="flex justify-between items-center mb-6 no-print">
+    <h2 class="text-3xl font-bold text-gray-800">Rapports des Courriers</h2>
+    <button *ngIf="reportData" (click)="printReport()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+      <i class="fas fa-print"></i>
+      <span>Imprimer le Rapport</span>
+    </button>
+  </div>
+  
+  <!-- Print Header -->
+  <div class="print-only mb-6">
+    <h1 class="text-2xl font-bold text-center mb-2">Système de Gestion des Courriers</h1>
+    <h2 class="text-xl font-semibold text-center mb-4">Rapport Mensuel - {{ getMonthName(selectedMonth) }} {{ selectedYear }}</h2>
+    <p class="text-center text-gray-600">Généré le: {{ getCurrentDate() }}</p>
+  </div>
+  
+  <!-- Date Selection -->
+  <div class="mb-6 flex space-x-4 no-print">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Mois</label>
+      <select [(ngModel)]="selectedMonth" (change)="onDateChange()" class="px-3 py-2 border border-gray-300 rounded-lg">
+        <option value="1">Janvier</option>
+        <option value="2">Février</option>
+        <option value="3">Mars</option>
+        <option value="4">Avril</option>
+        <option value="5">Mai</option>
+        <option value="6">Juin</option>
+        <option value="7">Juillet</option>
+        <option value="8">Août</option>
+        <option value="9">Septembre</option>
+        <option value="10">Octobre</option>
+        <option value="11">Novembre</option>
+        <option value="12">Décembre</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Année</label>
+      <input type="number" [(ngModel)]="selectedYear" (change)="onDateChange()" 
+             class="px-3 py-2 border border-gray-300 rounded-lg" min="2020" max="2030">
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-8">
+    <p class="text-gray-600">Chargement du rapport...</p>
+  </div>
+
+  <div *ngIf="reportData && !isLoading">
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-green-500 text-white p-6 rounded-lg">
+        <h3 class="text-lg font-semibold">Courriers Entrants</h3>
+        <p class="text-3xl font-bold mt-2">{{ reportData.couriersEntrants }}</p>
+      </div>
+      <div class="bg-blue-500 text-white p-6 rounded-lg">
+        <h3 class="text-lg font-semibold">Courriers Sortants</h3>
+        <p class="text-3xl font-bold mt-2">{{ reportData.couriersSortants }}</p>
+      </div>
+    </div>
+
+    <!-- Mail Types Chart -->
+    <div class="mb-8">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Types de Courriers les Plus Fréquents</h3>
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <div *ngFor="let type of getObjectKeys(reportData.typesFrequents)" class="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0">
+          <span class="font-medium">{{ type }}</span>
+          <div class="flex items-center space-x-2">
+            <div class="w-32 bg-gray-200 rounded-full h-2">
+              <div class="bg-blue-500 h-2 rounded-full" [style.width.%]="(reportData.typesFrequents[type] / (reportData.couriersEntrants + reportData.couriersSortants)) * 100"></div>
+            </div>
+            <span class="text-sm text-gray-600">{{ reportData.typesFrequents[type] }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Departments Chart -->
+    <div>
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Départements les Plus Actifs</h3>
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <div *ngFor="let dept of getObjectKeys(reportData.departementsActifs)" class="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0">
+          <span class="font-medium">{{ dept }}</span>
+          <div class="flex items-center space-x-2 min-w-0">
+            <div class="w-24 bg-gray-200 rounded-full h-2 flex-shrink-0">
+              <div class="bg-green-500 h-2 rounded-full" [style.width.%]="Math.min((reportData.departementsActifs[dept] / (reportData.couriersEntrants + reportData.couriersSortants)) * 100, 100)"></div>
+            </div>
+            <span class="text-sm text-gray-600 flex-shrink-0">{{ reportData.departementsActifs[dept] }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

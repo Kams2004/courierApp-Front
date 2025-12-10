@@ -1,0 +1,37 @@
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  body {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  
+  .bg-green-500, .bg-blue-500 {
+    background-color: #10b981 !important;
+    color: white !important;
+  }
+  
+  .shadow {
+    box-shadow: none !important;
+  }
+  
+  .rounded-lg {
+    border-radius: 0 !important;
+  }
+}
+
+.print-only {
+  display: none;
+}
+
+@media screen {
+  .print-only {
+    display: none;
+  }
+}

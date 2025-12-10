@@ -1,0 +1,61 @@
+<div class="bg-white rounded-lg shadow p-6">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Créer un Courrier</h2>
+  <form [formGroup]="courierForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+        <select formControlName="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option value="ENTRANT">Entrant</option>
+          <option value="SORTANT">Sortant</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Type de Courrier</label>
+        <select formControlName="mailType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option value="LETTRE">Lettre</option>
+          <option value="COLIS">Colis</option>
+          <option value="RECOMMANDE">Recommandé</option>
+          <option value="EXPRESS">Express</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+      <input type="date" formControlName="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Département</label>
+      <select formControlName="departmentId" (change)="onDepartmentChange(+$any($event.target).value)" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">Sélectionner un Département</option>
+        <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Destinataire</label>
+      <select formControlName="recipient" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">Sélectionner un Destinataire</option>
+        <option *ngFor="let user of users" [value]="user.firstName + ' ' + user.lastName">{{ user.firstName }} {{ user.lastName }} - {{ user.fonction }}</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Objet</label>
+      <textarea formControlName="object" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Fichier Joint (Optionnel)</label>
+      <input type="file" (change)="onFileSelected($event)" 
+             accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" 
+             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <p class="text-sm text-gray-500 mt-1">Formats acceptés: PDF, Images (JPG, PNG), Documents Word</p>
+    </div>
+    <div class="flex space-x-4">
+      <button type="submit" [disabled]="courierForm.invalid || isUploading" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg disabled:opacity-50">
+        <span *ngIf="isUploading">Création en cours...</span>
+        <span *ngIf="!isUploading">Créer le Courrier</span>
+      </button>
+      <button type="button" routerLink="/manager/couriers" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg">
+        Annuler
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,40 @@
+<div class="bg-white rounded-lg shadow p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-3xl font-bold text-gray-800">Users Management</h2>
+    <button routerLink="/admin/users/create" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+      <i class="fas fa-plus"></i>
+      <span>Add User</span>
+    </button>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full table-auto">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">First Name</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Name</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Function</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let user of users">
+          <td class="px-6 py-4 text-sm text-gray-900">{{ user.firstName }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ user.lastName }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ user.email }}</td>
+          <td class="px-6 py-4"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">{{ user.role }}</span></td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ user.fonction }}</td>
+          <td class="px-6 py-4 text-sm">
+            <button [routerLink]="['/admin/users/update', user.id]" class="text-blue-600 hover:text-blue-800 mr-3">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button (click)="deleteUser(user.id)" class="text-red-600 hover:text-red-800">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
